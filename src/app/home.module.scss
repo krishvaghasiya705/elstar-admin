@@ -1,0 +1,39 @@
+.home {
+    padding: 50px;
+  
+    .tabflxmain {
+      display: flex;
+      gap: 20px;
+  
+      .tabmain {
+        padding: 10px 20px;
+        background-color: gray;
+        white-space: nowrap;
+        border-radius: 6px;
+        width: 100%;
+      }
+  
+    //   &:has(.tabmain:nth-child(2)) {
+
+    //     .tabmain {
+    //         width: 49%;
+    //     }
+    //   }
+  
+    //   &:has(.tabmain:nth-child(5)) {
+    //     flex-wrap: wrap;
+
+    //     .tabmain {
+    //         width: 24%;
+    //     }
+    //   }
+    }
+  }
+  
+
+.layersectionmain {
+  svg {
+    width: 100%;
+    height: auto;
+  }
+}

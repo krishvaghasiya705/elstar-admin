@@ -1,0 +1,23 @@
+import React from "react";
+
+export default function Navigationicon({ widht, height }) {
+  return (
+    <svg
+      stroke="currentColor"
+      fill="none"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      height={height}
+      width={widht}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+        stroke="currentColor"
+      ></path>
+    </svg>
+  );
+}
