@@ -21,7 +21,29 @@ module.exports = {
       spacing: {},
       fontFamily: {
         Roboto: ["Roboto", "sans-serif"],
+        Inter: ["Inter", "sans-serif"],
+        InterUi: [
+          "Inter",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji",
+        ],
       },
+      safelist: [
+        {
+          pattern: /bg-(red|orange|emerald|sky)-(100|200|600|700)/,
+        },
+        {
+          pattern: /text-(gray|red|orange|emerald|sky)-(600|700|800)/,
+        },
+        {
+          pattern: /border-(gray|red|orange|emerald|sky)-(200|300)/,
+        },
+      ],
     },
   },
   plugins: [],

@@ -26,6 +26,7 @@ import Documenticon from "@/assets/icon/documenticon";
 import Shareicon from "@/assets/icon/shareicon";
 import Utilityicon from "@/assets/icon/utilityicon";
 import Chanalogicon from "@/assets/icon/chanalogicon";
+import Logo2 from "@/assets/icon/logo2";
 
 const sidebarSections = [
   {
@@ -259,7 +260,7 @@ const sidebarSections = [
       },
       {
         label: "Changelog",
-        labelpath: "",
+        labelpath: "/",
         icon: Chanalogicon,
         details: [],
       },
@@ -267,7 +268,7 @@ const sidebarSections = [
   },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isSidebarOpen }) {
   const pathname = usePathname();
 
   const defaultOpenDropdown = {};
@@ -277,7 +278,9 @@ export default function Sidebar() {
         item.details.forEach(({ name, path }) => {
           if (
             pathname === path ||
-            (pathname === "/" && name.toLowerCase() === "dashboard" && item.label === "Project")
+            (pathname === "/" &&
+              name.toLowerCase() === "dashboard" &&
+              item.label === "Project")
           ) {
             defaultOpenDropdown[`${sectionIdx}-${itemIdx}`] = true;
           }
@@ -287,6 +290,11 @@ export default function Sidebar() {
   });
 
   const [openDropdown, setOpenDropdown] = useState(defaultOpenDropdown);
+  const [hoverDropdown, setHoverDropdown] = useState(null);
+  const [dropdownPosition, setDropdownPosition] = useState({
+    top: 0,
+    item: null,
+  });
 
   const handleDropdown = (sectionIdx, itemIdx) => {
     setOpenDropdown((prev) => ({
@@ -294,119 +302,232 @@ export default function Sidebar() {
       [`${sectionIdx}-${itemIdx}`]: !prev[`${sectionIdx}-${itemIdx}`],
     }));
   };
-
   return (
-    <nav className="w-full h-full bg-gray-100">
-      <div className="sticky top-0 left-0 h-[64px] px-6 flex items-center">
-        <Link href={"/"}>
-          <Logo />
-        </Link>
-      </div>
-      <div className="pt-0 p-4 h-[calc(100%-64px)] overflow-y-hidden hover:overflow-y-auto gray-thin-scroll">
-        {sidebarSections.map((section, sectionIdx) => (
-          <div key={section.title}>
-            <div className="mt-4 mb-2 px-3">
-              <h1 className="text-sm font-semibold text-gray-500 uppercase font-Roboto">
-                {section.title}
-              </h1>
-            </div>
-            <div>
-              {section.items.map((item, itemIdx) => {
-                const Icon = item.icon;
-                const hasDropdown = Array.isArray(item.details) && item.details.length > 0;
-                const isOpen = openDropdown[`${sectionIdx}-${itemIdx}`];
-                const isSingleLink = !hasDropdown && item.labelpath;
+    <nav className="w-full h-full bg-gray-100 border-r border-gray-200">
+      <div
+        className={`relative transition-opacity duration-300 ease-in-out ${
+          isSidebarOpen
+            ? "opacity-100"
+            : "opacity-0 h-0 overflow-hidden pointer-events-none"
+        }`}
+      >
+        <div className="sticky top-0 left-0 h-[64px] px-6 flex items-center">
+          <Link href={"/"}>
+            <Logo />
+          </Link>
+        </div>
+        <div className="pt-0 p-4 h-[calc(100vh-64px)] overflow-y-hidden hover:overflow-y-auto gray-thin-scroll">
+          {sidebarSections.map((section, sectionIdx) => (
+            <div key={section.title}>
+              <div className="mt-4 mb-2 px-3">
+                <h1 className="text-sm font-semibold text-gray-500 uppercase font-Roboto">
+                  {section.title}
+                </h1>
+              </div>
+              <div>
+                {section.items.map((item, itemIdx) => {
+                  const Icon = item.icon;
+                  const hasDropdown =
+                    Array.isArray(item.details) && item.details.length > 0;
+                  const isDropdownOpen =
+                    openDropdown[`${sectionIdx}-${itemIdx}`];
+                  const isSingleLink = !hasDropdown && item.labelpath;
 
-                const isActiveItem = isSingleLink && pathname === item.labelpath;
+                  const isActiveItem =
+                    isSingleLink && pathname === item.labelpath;
 
-                const ItemWrapper = isSingleLink ? Link : "div";
-                const wrapperProps = isSingleLink ? { href: item.labelpath } : {};
+                  const ItemWrapper = isSingleLink ? Link : "div";
+                  const wrapperProps = isSingleLink
+                    ? { href: item.labelpath }
+                    : {};
 
-                return (
-                  <div key={item.label}>
-                    <ItemWrapper
-                      {...wrapperProps}
-                      className={`rounded-md py-[7px] px-3 mb-2 flex justify-between items-center cursor-pointer group hover:bg-[#dcdde1] transition-all duration-400 ease-in-out ${
-                        isActiveItem ? "bg-[#e2e4e7]" : ""
-                      }`}
-                      onClick={
-                        hasDropdown
-                          ? () => handleDropdown(sectionIdx, itemIdx)
-                          : undefined
-                      }
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl text-gray-600 group-hover:text-black transition-all duration-400 ease-in-out">
-                          <Icon widht="24px" height="24px" />
-                        </span>
-                        <p className="text-sm text-gray-600 font-semibold font-Roboto group-hover:text-black transition-all duration-400 ease-in-out">
-                          {item.label}
-                        </p>
-                      </div>
-                      {hasDropdown && (
-                        <span
-                          className={`mt-1 text-lg text-gray-600 group-hover:text-black transition-all duration-400 ease-in-out transform ${
-                            isOpen ? "rotate-180" : ""
-                          }`}
-                        >
-                          <Dropdownicon widht="18px" height="18px" />
-                        </span>
-                      )}
-                    </ItemWrapper>
-
-                    {hasDropdown && (
-                      <div
-                        className={`ml-5 overflow-hidden transition-all duration-400 ease-in-out ${
-                          isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                  return (
+                    <div key={item.label}>
+                      <ItemWrapper
+                        {...wrapperProps}
+                        className={`rounded-md py-[7px] px-3 mb-2 flex justify-between items-center cursor-pointer group hover:bg-[#dcdde1] transition-all duration-400 ease-in-out ${
+                          isActiveItem ? "bg-[#e2e4e7]" : ""
                         }`}
-                        style={{ transitionProperty: "max-height, opacity" }}
+                        onClick={
+                          hasDropdown
+                            ? () => handleDropdown(sectionIdx, itemIdx)
+                            : undefined
+                        }
                       >
-                        {item.details.map(({ name, path }) => {
-                          const isActive =
-                            pathname === path ||
-                            (pathname === "/" &&
-                              name.toLowerCase() === "dashboard" &&
-                              item.label === "Project");
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl text-gray-600 group-hover:text-black transition-all duration-400 ease-in-out">
+                            <Icon width="24px" height="24px" />
+                          </span>
+                          <p className="text-sm text-gray-600 font-semibold font-Roboto group-hover:text-black transition-all duration-400 ease-in-out">
+                            {item.label}
+                          </p>
+                        </div>
+                        {hasDropdown && (
+                          <span
+                            className={`mt-1 text-lg text-gray-600 group-hover:text-black transition-all duration-400 ease-in-out transform ${
+                              isDropdownOpen ? "rotate-180" : ""
+                            }`}
+                          >
+                            <Dropdownicon width="18px" height="18px" />
+                          </span>
+                        )}
+                      </ItemWrapper>
 
-                          const content = (
-                            <p
-                              className={`text-sm font-semibold font-Roboto capitalize transition-all duration-400 ease-in-out ${
-                                isActive
-                                  ? "text-black"
-                                  : "text-gray-500 group-hover:text-black"
-                              }`}
-                            >
-                              {name}
-                            </p>
-                          );
+                      {hasDropdown && (
+                        <div
+                          className={`ml-5 overflow-hidden transition-all duration-400 ease-in-out ${
+                            isDropdownOpen
+                              ? "max-h-[500px] opacity-100"
+                              : "max-h-0 opacity-0"
+                          }`}
+                          style={{ transitionProperty: "max-height, opacity" }}
+                        >
+                          {item.details.map(({ name, path }) => {
+                            const isActive =
+                              pathname === path ||
+                              (pathname === "/" &&
+                                name.toLowerCase() === "dashboard" &&
+                                item.label === "Project");
 
-                          return path ? (
-                            <Link
-                              href={path}
-                              key={name}
-                              className={`block rounded-md py-[9px] px-3 cursor-pointer group hover:bg-[#dcdde1] transition-all duration-400 ease-in-out ${
-                                isActive ? "bg-[#e2e4e7]" : ""
-                              }`}
-                            >
-                              {content}
-                            </Link>
-                          ) : (
-                            <div
-                              key={name}
-                              className="rounded-md py-[9px] px-3 cursor-pointer select-none group hover:bg-[#dcdde1] transition-all duration-400 ease-in-out"
-                            >
-                              {content}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
+                            const content = (
+                              <p
+                                className={`text-sm font-semibold font-Roboto capitalize transition-all duration-400 ease-in-out ${
+                                  isActive
+                                    ? "text-black"
+                                    : "text-gray-500 group-hover:text-black"
+                                }`}
+                              >
+                                {name}
+                              </p>
+                            );
+
+                            return path ? (
+                              <Link
+                                href={path}
+                                key={name}
+                                className={`block rounded-md py-[9px] px-3 cursor-pointer group hover:bg-[#dcdde1] transition-all duration-400 ease-in-out ${
+                                  isActive ? "bg-[#e2e4e7]" : ""
+                                }`}
+                              >
+                                {content}
+                              </Link>
+                            ) : (
+                              <div
+                                key={name}
+                                className="rounded-md py-[9px] px-3 cursor-pointer select-none group hover:bg-[#dcdde1] transition-all duration-400 ease-in-out"
+                              >
+                                {content}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div
+        className={`transition-opacity duration-300 ease-in-out ${
+          !isSidebarOpen
+            ? "opacity-100"
+            : "opacity-0 h-0 overflow-hidden pointer-events-none"
+        } relative`}
+      >
+        <div className="sticky top-0 left-0 h-[64px] px-4 flex items-center justify-center">
+          <Link href={"/"}>
+            <Logo2 />
+          </Link>
+        </div>
+        {hoverDropdown && dropdownPosition.item && (
+          <div
+            className="absolute z-50 left-16"
+            style={{
+              top: dropdownPosition.top,
+            }}
+            onMouseEnter={() => setHoverDropdown(dropdownPosition.item.label)}
+            onMouseLeave={() => setHoverDropdown(null)}
+          >
+            <div className="bg-white border rounded-md shadow-lg p-2 min-w-[200px]">
+              {dropdownPosition.item.details.map(({ name, path }) => {
+                const content = (
+                  <span className="text-sm font-semibold text-gray-600 font-Roboto group-hover:text-black transition-all duration-400 ease-in-out">
+                    {name}
+                  </span>
+                );
+                return path ? (
+                  <Link
+                    key={name}
+                    href={path}
+                    className="flex justify-between items-center mb-1 py-[6px] px-3 cursor-pointer rounded-md group hover:bg-[#f3f4f6] transition-all duration-400 ease-in-out"
+                  >
+                    {content}
+                  </Link>
+                ) : (
+                  <div
+                    key={name}
+                    className="flex justify-between items-center mb-1 py-[6px] px-3 cursor-pointer rounded-md group hover:bg-[#f3f4f6] transition-all duration-400 ease-in-out"
+                  >
+                    {content}
                   </div>
                 );
               })}
             </div>
           </div>
-        ))}
+        )}
+
+        <div className="px-4 pb-4 h-[calc(100vh-64px)] overflow-y-hidden hover:overflow-y-auto gray-thin-scroll">
+          {sidebarSections.map((section, sectionIdx) => (
+            <div key={section.title}>
+              {section.items.map((item, itemIdx) => {
+                const Icon = item.icon;
+                const hasDropdown =
+                  Array.isArray(item.details) && item.details.length > 0;
+                const dropdownId = `${sectionIdx}-${itemIdx}`;
+                const isSingleLink = !hasDropdown && item.labelpath;
+
+                const handleMouseEnter = (e) => {
+                  if (hasDropdown) {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    setDropdownPosition({
+                      top: rect.top,
+                      left: rect.right + 8,
+                      item: item,
+                    });
+                    setHoverDropdown(dropdownId);
+                  } else {
+                    setHoverDropdown(null);
+                  }
+                };
+
+                const itemContent = (
+                  <div
+                    className="px-5 py-2 mb-2 flex justify-center items-center cursor-pointer rounded-md relative group hover:bg-[#dcdde1] transition-all duration-400 ease-in-out"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={() => setHoverDropdown(null)}
+                  >
+                    <span className="text-2xl text-gray-600 group-hover:text-black transition-all duration-400 ease-in-out">
+                      <Icon width="24px" height="24px" />
+                    </span>
+                  </div>
+                );
+
+                if (isSingleLink) {
+                  return (
+                    <Link href={item.labelpath} key={item.label}>
+                      {itemContent}
+                    </Link>
+                  );
+                }
+
+                return <div key={item.label}>{itemContent}</div>;
+              })}
+            </div>
+          ))}
+        </div>
       </div>
     </nav>
   );
