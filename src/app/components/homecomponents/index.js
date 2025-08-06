@@ -1,6 +1,9 @@
 import React from "react";
 import Taskoverview from "./taskoverview";
 import Mytasks from "./mytasks";
+import Projects from "./projects";
+import Activities from "./activities";
+import Schedule from "./schedule";
 
 export default function Homecomponent() {
 
@@ -18,12 +21,12 @@ export default function Homecomponent() {
         <div className="w-full flex flex-col gap-4">
           <Taskoverview />
           <Mytasks />
+          <Projects />
         </div>
 
         <div className="w-full flex flex-col gap-4">
-          <div className="p-5 border border-gray-200 bg-white rounded-lg">
-            {/* placeholder right side panel */}
-          </div>
+          <Schedule />
+          <Activities />
         </div>
       </div>
     </div>

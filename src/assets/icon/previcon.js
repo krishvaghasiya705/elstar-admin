@@ -1,0 +1,22 @@
+import React from "react";
+
+export default function Previcon({ height, width }) {
+  return (
+    <svg
+      strokeWidth="0"
+      viewBox="0 0 20 20"
+      aria-hidden="true"
+      height={height}
+      width={width}
+      xmlns="http://www.w3.org/2000/svg"
+      stroke="currentColor"
+      fill="currentColor"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+      ></path>
+    </svg>
+  );
+}

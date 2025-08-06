@@ -13,12 +13,13 @@ export default function CommonButton({
   block = false,
   onClick,
   Styling,
+  dotstyle
 }) {
   const sizeClassMap = {
-    xs: "h-7 px-2 text-xs",
-    sm: "h-8 px-3 text-sm",
-    md: "h-9 px-4 text-sm",
-    lg: "h-10 px-5 text-base",
+    xs: "px-2 py-1 text-xs",
+    sm: "px-3 py-1 text-sm",
+    md: "px-4 py-2 text-sm",
+    lg: "px-5 py-3 text-base",
   };
 
   const shapeClassMap = {
@@ -49,7 +50,7 @@ export default function CommonButton({
   const disabledState =
     disabled || loading ? "opacity-50 cursor-not-allowed" : "";
 
-  const buttonClasses = `${baseClasses} ${sizeClassMap[size]} ${shapeClassMap[shape]} ${colorClasses} ${fullWidth} ${activeRing} ${disabledState} ${Styling}`;
+  const buttonClasses = `${Styling} ${baseClasses} ${sizeClassMap[size]} ${shapeClassMap[shape]} ${colorClasses} ${fullWidth} ${activeRing} ${disabledState}`;
 
   return (
     <button
@@ -79,6 +80,7 @@ export default function CommonButton({
           ></path>
         </svg>
       )}
+      {dotstyle && <span className={`${dotstyle} rounded-full mr-[6px]`}></span>}
       {!loading && icon && <span className="mr-2">{icon}</span>}
       {!shape.includes("circle") && <span>{text}</span>}
     </button>
