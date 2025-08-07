@@ -1,491 +1,187 @@
+"use client";
+import React, { useState } from "react";
 import Nexticon from "@/assets/icon/nexticon";
 import Previcon from "@/assets/icon/previcon";
-import React from "react";
+import dayjs from "dayjs"; // install this if not already
 
-export default function Calender() {
+const monthNames = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+const yearRange = (start, end) =>
+  Array.from({ length: end - start + 1 }, (_, i) => start + i);
+
+export default function Calendar() {
+  const today = dayjs();
+  const [view, setView] = useState("date"); // "date" | "month" | "year"
+  const [selectedDate, setSelectedDate] = useState(today);
+  const [activeDate, setActiveDate] = useState(today);
+  const startOfMonth = selectedDate.startOf("month");
+  const endOfMonth = selectedDate.endOf("month");
+  const startDay = startOfMonth.day() === 0 ? 6 : startOfMonth.day() - 1;
+
+  const daysInMonth = [];
+  for (let i = 0; i < startDay; i++) {
+    daysInMonth.push(null);
+  }
+  for (let d = 1; d <= endOfMonth.date(); d++) {
+    daysInMonth.push(dayjs(selectedDate).date(d));
+  }
+
+  const changeMonth = (direction) => {
+    const newDate = selectedDate.add(direction, "month");
+    setSelectedDate(newDate);
+  };
+
+  const changeYear = (direction) => {
+    const newDate = selectedDate.add(direction, "year");
+    setSelectedDate(newDate);
+  };
+
+  const setMonth = (index) => {
+    setSelectedDate(selectedDate.month(index));
+    setView("date");
+  };
+
+  const setYear = (year) => {
+    setSelectedDate(selectedDate.year(year));
+    setView("month");
+  };
+
+  const isSameDay = (d1, d2) =>
+    d1?.format("YYYY-MM-DD") === d2?.format("YYYY-MM-DD");
+
+  const handleDateClick = (date) => {
+    setActiveDate(date);
+  };
+
   return (
-    <div>
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-1">
-            <span className="text-lg font-semibold font-InterUi text-gray-900 cursor-pointer hover:text-indigo-600 select-none">
-              Aug
-            </span>
-            <span className="text-lg font-semibold font-InterUi text-gray-900 cursor-pointer hover:text-indigo-600 select-none">
-              2025
-            </span>
-          </div>
-          <div className="flex items-center">
-            <div className="bg-transparent border border-transparent hover:bg-gray-50 active:bg-gray-100 text-gray-600 rounded-md h-9 w-9 flex items-center justify-center cursor-pointer">
-              <Previcon width="18px" height="18px" />
-            </div>
-            <div className="bg-transparent border border-transparent hover:bg-gray-50 active:bg-gray-100 text-gray-600 rounded-md h-9 w-9 flex items-center justify-center cursor-pointer">
-              <Nexticon width="18px" height="18px" />
-            </div>
-          </div>
+    <>
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <span
+            onClick={() => setView("month")}
+            className="text-lg font-semibold cursor-pointer hover:text-indigo-600 select-none"
+          >
+            {selectedDate.format("MMM")}
+          </span>
+          <span
+            onClick={() => setView("year")}
+            className="text-lg font-semibold cursor-pointer hover:text-indigo-600 select-none"
+          >
+            {selectedDate.format("YYYY")}
+          </span>
         </div>
-        <table cellSpacing="0" className="w-full">
-          <thead>
-            <tr>
-              <th className="h-7">
-                <span className="text-sm font-semibold font-InterUi text-gray-500">
-                  Mo
-                </span>
-              </th>
-              <th className="h-7">
-                <span className="text-sm font-semibold font-InterUi text-gray-500">
-                  Tu
-                </span>
-              </th>
-              <th className="h-7">
-                <span className="text-sm font-semibold font-InterUi text-gray-500">
-                  We
-                </span>
-              </th>
-              <th className="h-7">
-                <span className="text-sm font-semibold font-InterUi text-gray-500">
-                  Th
-                </span>
-              </th>
-              <th className="h-7">
-                <span className="text-sm font-semibold font-InterUi text-gray-500">
-                  Fr
-                </span>
-              </th>
-              <th className="h-7">
-                <span className="text-sm font-semibold font-InterUi text-gray-500">
-                  Sa
-                </span>
-              </th>
-              <th className="h-7">
-                <span className="text-sm font-semibold font-InterUi text-gray-500">
-                  Su
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-500">
-                    28
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-500">
-                    29
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-500">
-                    30
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-500">
-                    31
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    1
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    2
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    3
-                  </span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    4
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    5
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white border border-indigo-600 hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-indigo-600">
-                    6
-                  </span>
-                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2">
-                    <span className="w-1 h-1 rounded-full bg-red-500 block"></span>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    7
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    8
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    9
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    10
-                  </span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    11
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    12
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    13
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    14
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    15
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    16
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    17
-                  </span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    18
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    19
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    20
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    21
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    22
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    23
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    24
-                  </span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    25
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    26
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    27
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    28
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    29
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    30
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div className="w-full max-w-12 mx-auto h-12 cursor-pointer flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 relative">
-                  <span className="text-base font-medium font-InterUi text-gray-700">
-                    31
-                  </span>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-1">
-            <span className="text-lg font-semibold font-InterUi text-gray-900 cursor-pointer hover:text-indigo-600 select-none">
-              2025
-            </span>
+        <div className="flex items-center gap-1">
+          <div
+            onClick={() => (view === "date" ? changeMonth(-1) : changeYear(-1))}
+            className="h-9 w-9 rounded-md flex items-center justify-center cursor-pointer hover:bg-gray-100"
+          >
+            <Previcon width="18px" height="18px" />
           </div>
-          <div className="flex items-center">
-            <div className="bg-transparent border border-transparent hover:bg-gray-50 active:bg-gray-100 text-gray-600 rounded-md h-9 w-9 flex items-center justify-center cursor-pointer">
-              <Previcon width="18px" height="18px" />
-            </div>
-            <div className="bg-transparent border border-transparent hover:bg-gray-50 active:bg-gray-100 text-gray-600 rounded-md h-9 w-9 flex items-center justify-center cursor-pointer">
-              <Nexticon width="18px" height="18px" />
-            </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-3 gap-2">
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              Jan
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              Feb
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              Mar
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              Apr
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              May
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              Jun
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              Jul
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-indigo-600 hover:bg-indigo-600 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-white">
-              Aug
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              Sep
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              Oct
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              Nov
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              Dec
-            </span>
+          <div
+            onClick={() => (view === "date" ? changeMonth(1) : changeYear(1))}
+            className="h-9 w-9 rounded-md flex items-center justify-center cursor-pointer hover:bg-gray-100"
+          >
+            <Nexticon width="18px" height="18px" />
           </div>
         </div>
       </div>
 
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-1">
-            <span className="text-lg font-semibold font-InterUi text-gray-900 cursor-pointer hover:text-indigo-600 select-none">
-              2019 - 2030
-            </span>
+      {view === "date" && (
+        <>
+          <div className="grid grid-cols-7 text-center text-gray-500 font-semibold text-sm mb-1">
+            {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((d) => (
+              <div
+                key={d}
+                className="h-7 flex justify-center items-center"
+              >
+                <div className="text-sm font-semibold font-InterUi text-gray-500">{d}</div>
+              </div>
+            ))}
           </div>
-          <div className="flex items-center">
-            <div className="bg-transparent border border-transparent hover:bg-gray-50 active:bg-gray-100 text-gray-600 rounded-md h-9 w-9 flex items-center justify-center cursor-pointer">
-              <Previcon width="18px" height="18px" />
-            </div>
-            <div className="bg-transparent border border-transparent hover:bg-gray-50 active:bg-gray-100 text-gray-600 rounded-md h-9 w-9 flex items-center justify-center cursor-pointer">
-              <Nexticon width="18px" height="18px" />
-            </div>
+          <div className="grid grid-cols-7">
+            {daysInMonth.map((date, i) => {
+              const isToday = isSameDay(date, today);
+              const isActive = isSameDay(date, activeDate);
+
+              return (
+                <div
+                  key={i}
+                  onClick={() => date && handleDateClick(date)}
+                  className={`h-12 flex items-center justify-center rounded-lg cursor-pointer relative transition-all duration-200
+        ${
+          !date
+            ? ""
+            : isActive
+            ? "bg-indigo-600 text-white hover:bg-indigo-600"
+            : isToday
+            ? "border border-indigo-600 text-indigo-600"
+            : "text-gray-700 hover:bg-gray-100"
+        }
+      `}
+                >
+                  {date && (
+                    <>
+                      <span className="text-base font-medium font-InterUi">{date.date()}</span>
+                      {isToday && (
+                        <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-red-500 rounded-full"></span>
+                      )}
+                    </>
+                  )}
+                </div>
+              );
+            })}
           </div>
-        </div>
+        </>
+      )}
+
+      {view === "month" && (
         <div className="grid grid-cols-3 gap-2">
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              2019
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              2020
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              2021
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              2022
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              2023
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              2024
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-indigo-600 hover:bg-indigo-600 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-white">
-              2025
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              2026
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              2027
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              2028
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              2029
-            </span>
-          </div>
-          <div className="p-2 flex justify-center items-center rounded-lg bg-white hover:bg-gray-100 cursor-pointer">
-            <span className="text-sm font-semibold font-InterUi text-gray-500">
-              2030
-            </span>
-          </div>
+          {monthNames.map((name, index) => (
+            <div
+              key={index}
+              onClick={() => setMonth(index)}
+              className={`p-2 text-center rounded-lg cursor-pointer ${
+                index === selectedDate.month()
+                  ? "bg-indigo-600 text-white"
+                  : "hover:bg-gray-100 text-gray-500"
+              }`}
+            >
+              {name}
+            </div>
+          ))}
         </div>
-      </div>
-    </div>
+      )}
+
+      {view === "year" && (
+        <div className="grid grid-cols-3 gap-2">
+          {yearRange(2019, 2030).map((year) => (
+            <div
+              key={year}
+              onClick={() => setYear(year)}
+              className={`p-2 text-center rounded-lg cursor-pointer ${
+                year === selectedDate.year()
+                  ? "bg-indigo-600 text-white"
+                  : "hover:bg-gray-100 text-gray-500"
+              }`}
+            >
+              {year}
+            </div>
+          ))}
+        </div>
+      )}
+    </>
   );
 }
