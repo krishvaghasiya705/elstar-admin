@@ -1,10 +1,12 @@
 import react from "react";
-import Homepage from "./pages/homepage";
+import Homepage from "../pages/homepage";
 
 export default function Home() {
   return (
     <>
-      <Homepage />
+      <div className="py-6 px-8">
+        <Homepage />
+      </div>
     </>
   );
 }

@@ -56,3 +56,34 @@ p {
     cursor: pointer;
   }
 }
+
+.apexcharts-canvas {
+  width: 100% !important;
+
+  svg {
+    width: 100% !important;
+  }
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  display: none;
+}
+
+input[type="checkbox"] {
+  &:checked {
+    background-color: currentColor;
+    border-color: #0000;
+    background-image: url("../assets/icon/true.svg");
+    appearance: none;
+  }
+}
+
+.scroll-hidden {
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}

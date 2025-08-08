@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Header from "./common/header";
-import Sidebar from "./common/sidebar";
 import "./globals.scss";
 import "@/font/font.scss";
 import "@/styles/tailwind.css";
-import Footer from "./common/footer";
+import Footer from "@/common/footer";
+import Header from "@/common/header";
+import Sidebar from "@/common/sidebar";
 
 export default function RootLayout({ children }) {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
@@ -50,10 +50,8 @@ export default function RootLayout({ children }) {
               toggleSidebar={toggleSidebar}
               isSidebarOpen={isSidebarOpen}
             />
-            <div className="h-[calc(100%-64px)]">
-              <div className="py-6 px-8">
-                <div>{children}</div>
-              </div>
+            <div className="h-[calc(100%-64px)] flex flex-col justify-between">
+              <div>{children}</div>
               <Footer />
             </div>
           </div>
