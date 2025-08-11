@@ -1,3 +1,4 @@
+"use client";
 import Tooltip from "@/common/tooltip";
 import Image from "next/image";
 import React from "react";
@@ -5,25 +6,26 @@ import React from "react";
 import thumb1 from "@/assets/image/thumb1.jpg";
 import thumb2 from "@/assets/image/thumb2.jpg";
 import thumb3 from "@/assets/image/thumb3.jpg";
-import thumb4 from "@/assets/image/thumb4.jpg";
 import thumb5 from "@/assets/image/thumb5.jpg";
-import thumb6 from "@/assets/image/thumb6.jpg";
-import thumb7 from "@/assets/image/thumb7.jpg";
-import thumb8 from "@/assets/image/thumb8.jpg";
-import thumb9 from "@/assets/image/thumb9.jpg";
-import thumb10 from "@/assets/image/thumb10.jpg";
-import thumb11 from "@/assets/image/thumb11.jpg";
-import thumb12 from "@/assets/image/thumb12.jpg";
-import thumb13 from "@/assets/image/thumb13.jpg";
-import thumb14 from "@/assets/image/thumb14.jpg";
-import thumb15 from "@/assets/image/thumb15.jpg";
 import CommonButton from "@/common/commonbutton";
 import Signuppicon from "@/assets/icon/signuppicon";
 import Settingicon from "@/assets/icon/settingicon";
 import Circleplusicon from "@/assets/icon/circleplusicon";
 import Tabs from "@/common/tabs";
 
-export default function Scrumboardheader() {
+export default function Scrumboardheader({ activeTab, onTabChange }) {
+  const tabItems = [
+    { label: 'All', value: 'all' },
+    { label: 'Task', value: 'task' },
+    { label: 'Bug', value: 'bug' },
+    { label: 'Live issue', value: 'live-issue' },
+    { label: 'Low priority', value: 'low-priority' },
+  ];
+
+  const handleTabClick = (tabValue) => {
+    onTabChange(tabValue);
+  };
+
   return (
     <>
       <div className="pt-8 pb-4 border-b border-gray-200 bg-white">
@@ -89,7 +91,16 @@ export default function Scrumboardheader() {
           </div>
           <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-4">
             <div>
-              <Tabs />
+              <Tabs 
+                tabs={tabItems}
+                defaultActiveTab={tabItems.findIndex(tab => tab.value === activeTab)}
+                onTabChange={(index) => handleTabClick(tabItems[index].value)}
+                className="mt-4"
+                activeTabClassName="bg-indigo-50"
+                inactiveTabClassName="bg-white"
+                activeTextClassName="text-indigo-600"
+                inactiveTextClassName="text-gray-500 hover:text-indigo-600"
+              />
             </div>
             <div className="flex items-center gap-2">
               <CommonButton
